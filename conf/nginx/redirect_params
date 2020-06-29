@@ -1,0 +1,6 @@
+location / {
+        # Redirect everything that isn’t a real file to index.php
+        add_header Access-Control-Allow-Origin *;
+        try_files $uri $uri/ /index.php?$query_string;
+
+}

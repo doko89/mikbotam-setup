@@ -12,11 +12,11 @@ if [ "$WEBSVC" == "y" ];then
 	read -p "Please input domain : " DOMAIN
 	if [ "$VERSION" == "sqlite" ];then
 		apt update
-		apt -y install nginx php-fpm php-sqlite3 supervisor sqlite3
+		apt -y install nginx php-fpm php-sqlite3 php-curl supervisor sqlite3 curl
 	fi
 	if [ "$VERSION" == "mysql" ];then 
 		apt update
-		apt -y install nginx php-fpm php-mysql supervisor mariadb-server
+		apt -y install nginx php-fpm php-mysql php-curl supervisor mariadb-server curl
 	fi
 	## config
 	mv conf/nginx/* /etc/nginx
@@ -49,7 +49,7 @@ if [ "$MIKBOTAM" == "y" ];then
 	chown -R www-data.www-data /apps
 	## add long-polling
 	cp conf/supervisor/long-polling.conf /etc/supervisor/conf.d/
-	supervisor reload
+	supervisorctl reload
 	crontab -l > /root/cron.backup
 	crontab conf/cron
 fi

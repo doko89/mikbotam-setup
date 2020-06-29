@@ -1,4 +1,10 @@
 #!/bin/bash
+## script by doko89
+
+clear
+echo "==================================="
+echo "script mikbotam installer by doko89"
+echo "==================================="
 
 read -p "Install web service (y/n) : " WEBSVC
 read -p "Install mikbotam (y/n) : " MIKBOTAM
@@ -10,13 +16,17 @@ fi
 
 if [ "$WEBSVC" == "y" ];then
 	read -p "Please input domain : " DOMAIN
+	clear
+	echo "======================"
+	echo "Installing packages..."
+	echo "======================"
 	if [ "$VERSION" == "sqlite" ];then
 		apt update
-		apt -y install nginx php-fpm php-sqlite3 php-curl supervisor sqlite3 curl
+		apt -yqq install nginx php-fpm php-sqlite3 php-curl supervisor sqlite3 curl
 	fi
 	if [ "$VERSION" == "mysql" ];then 
 		apt update
-		apt -y install nginx php-fpm php-mysql php-curl supervisor mariadb-server curl
+		apt -yqq install nginx php-fpm php-mysql php-curl supervisor mariadb-server curl
 	fi
 	## config
 	cp conf/nginx/* /etc/nginx
@@ -27,10 +37,17 @@ if [ "$WEBSVC" == "y" ];then
 	# delete default vhost
 	PHPFPM=$(systemctl list-units --type=service|grep php|awk '{print $1}')
 	rm /etc/nginx/sites-enabled/*
+        echo "======================"
+        echo "Restarting services..."
+        echo "======================"
 	for i in nginx $PHPFPM;do systemctl restart $i;done
 fi
 
 if [ "$MIKBOTAM" == "y" ];then
+        echo "======================"
+        echo "Installing Mikbotam..."
+        echo "======================"
+
 	if [ -d /apps/mikbotam ];then
 		mv /apps/mikbotam /apps/mikbotam.bak
 	fi
@@ -54,6 +71,10 @@ if [ "$MIKBOTAM" == "y" ];then
 	crontab conf/cron
 	echo "setup mikbotam Done!!!"
 fi
+        echo "=============="
+        echo "Extra Tools..."
+        echo "=============="
+
 read -p "Do you want to install mikhmon (y/n) : " MIKHMON
 if [ "$MIKHMON" == "y" ];then
 	read -p "Mikhmon domain : " MIKHDOM
@@ -62,6 +83,13 @@ if [ "$MIKHMON" == "y" ];then
 	cp conf/nginx/app.conf /etc/nginx/conf.d/mikhmon.conf
 	sed -i "s+DOMAIN+$MIKHDOM+" /etc/nginx/conf.d/mikhmon.conf
 	sed -i "s+/apps/mikbotam+/apps/mikhmon+" /etc/nginx/conf.d/mikhmon.conf
+	echo "Setup mikhmon Done!!!"
+fi
+echo
+echo
+echo "url mikbotam : http://$DOMAIN"
+if [ ! -n $MIKHDOM ];then
+echo "url mikhmon : http://$MIKHDOM"
 fi
 
 ## cleanup

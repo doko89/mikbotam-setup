@@ -83,6 +83,7 @@ if [ "$MIKHMON" == "y" ];then
 	cp conf/nginx/app.conf /etc/nginx/conf.d/mikhmon.conf
 	sed -i "s+DOMAIN+$MIKHDOM+" /etc/nginx/conf.d/mikhmon.conf
 	sed -i "s+/apps/mikbotam+/apps/mikhmon+" /etc/nginx/conf.d/mikhmon.conf
+	systemctl restart nginx
 	echo "Setup mikhmon Done!!!"
 fi
 echo

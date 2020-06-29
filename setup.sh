@@ -54,3 +54,7 @@ if [ "$MIKBOTAM" == "y" ];then
 	crontab conf/cron
 fi
 
+## cleanup
+DIR=$(pwd)
+cd $HOME
+rm -rf $DIR

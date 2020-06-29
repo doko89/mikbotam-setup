@@ -19,7 +19,7 @@ if [ "$WEBSVC" == "y" ];then
 		apt -y install nginx php-fpm php-mysql php-curl supervisor mariadb-server curl
 	fi
 	## config
-	mv conf/nginx/* /etc/nginx
+	cp conf/nginx/* /etc/nginx
 	mv /etc/nginx/app.conf /etc/nginx/conf.d
 	SOCK=$(grep "^listen " /etc/php/* -r|awk '{print $3}')
 	sed -i "s+SOCK+$SOCK+" /etc/nginx/php_params
@@ -52,6 +52,16 @@ if [ "$MIKBOTAM" == "y" ];then
 	supervisorctl reload
 	crontab -l > /root/cron.backup
 	crontab conf/cron
+	echo "setup mikbotam Done!!!"
+fi
+read -p "Do you want to install mikhmon (y/n) : " MIKHMON
+if [ "$MIKHMON" == "y" ];then
+	read -p "Mikhmon domain : " MIKHDOM
+	git clone https://github.com/laksa19/mikhmonv3.git /apps/mikhmon
+	chown -R www-data.www-data /apps/mikhmon
+	cp conf/nginx/app.conf /etc/nginx/conf.d/mikhmon.conf
+	sed -i "s+DOMAIN+$MIKHDOM+" /etc/nginx/conf.d/mikhmon.conf
+	sed -i "s+/apps/mikbotam+/apps/mikhmon+" /etc/nginx/conf.d/mikhmon.conf
 fi
 
 ## cleanup

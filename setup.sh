@@ -11,9 +11,11 @@ fi
 if [ "$WEBSVC" == "y" ];then
 	read -p "Please input domain : " DOMAIN
 	if [ "$VERSION" == "sqlite" ];then
+		apt update
 		apt -y install nginx php-fpm php-sqlite3 supervisor sqlite3
 	fi
 	if [ "$VERSION" == "mysql" ];then 
+		apt update
 		apt -y install nginx php-fpm php-mysql supervisor mariadb-server
 	fi
 	## config

@@ -24,6 +24,10 @@ if [ "$WEBSVC" == "y" ];then
 	SOCK=$(grep "^listen " /etc/php/* -r|awk '{print $3}')
 	sed -i "s+SOCK+$SOCK+" /etc/nginx/php_params
 	sed -i "s+DOMAIN+$DOMAIN+" /etc/nginx/conf.d/app.conf
+	# delete default vhost
+	PHPFPM=$(systemctl list-units --type=service|grep php|awk '{print $1}')
+	rm /etc/nginx/sites-enabled/*
+	for i in nginx $PHPFPM;do systemctl restart $i;done
 fi
 
 if [ "$MIKBOTAM" == "y" ];then
@@ -43,5 +47,10 @@ if [ "$MIKBOTAM" == "y" ];then
 	fi
 	# config
 	chown -R www-data.www-data /apps
+	## add long-polling
+	cp conf/supervisor/long-polling.conf /etc/supervisor/conf.d/
+	supervisor reload
+	crontab -l > /root/cron.backup
+	crontab conf/cron
 fi
 

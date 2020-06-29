@@ -22,11 +22,11 @@ if [ "$WEBSVC" == "y" ];then
 	echo "======================"
 	if [ "$VERSION" == "sqlite" ];then
 		apt update
-		apt -yqq install nginx php-fpm php-sqlite3 php-curl supervisor sqlite3 curl
+		apt -yq install nginx php-fpm php-sqlite3 php-curl supervisor sqlite3 curl
 	fi
 	if [ "$VERSION" == "mysql" ];then 
 		apt update
-		apt -yqq install nginx php-fpm php-mysql php-curl supervisor mariadb-server curl
+		apt -yq install nginx php-fpm php-mysql php-curl supervisor mariadb-server curl
 	fi
 	## config
 	cp conf/nginx/* /etc/nginx
@@ -88,7 +88,7 @@ fi
 echo
 echo
 echo "url mikbotam : http://$DOMAIN"
-if [ ! -n $MIKHDOM ];then
+if [ ! -z $MIKHDOM ];then
 echo "url mikhmon : http://$MIKHDOM"
 fi
 

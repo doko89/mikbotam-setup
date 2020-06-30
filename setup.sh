@@ -27,6 +27,7 @@ if [ "$WEBSVC" == "y" ];then
 	if [ "$VERSION" == "mysql" ];then 
 		apt update
 		apt -yq install nginx php-fpm php-mysql php-curl supervisor mariadb-server curl
+		systemctl start mariadb
 	fi
 	## config
 	cp conf/nginx/* /etc/nginx
